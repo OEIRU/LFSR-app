@@ -154,10 +154,17 @@ class LFSRApp:
         return sequence, period, S_star, p_value, hypothesis, critical_value, K
 
     def calculate_period(self, sequence):
-        for i in range(1, len(sequence)):
-            if sequence[:i] == sequence[i:i + i]:
-                return i
-        return len(sequence)
+        n = len(sequence)
+        for p in range(1, n // 2 + 1):  # Проверяем длину периода от 1 до n//2
+            if n % p == 0:  # Только длины, которые могут быть делителями длины последовательности
+                is_periodic = True
+                for i in range(p, n):
+                    if sequence[i] != sequence[i % p]:  # Проверяем, повторяется ли шаблон
+                        is_periodic = False
+                        break
+                if is_periodic:
+                    return p  # Возвращаем первый найденный период
+        return n  # Если период не найден, возвращаем длину последовательности
 
     def calculate_chi_square(self, sequence):
         N = len(sequence)
